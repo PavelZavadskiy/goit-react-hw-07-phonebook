@@ -1,11 +1,10 @@
-import { nanoid } from 'nanoid';
 import { Wrapper, Text, Input, Button, ErrorText } from './ContactForm.styled';
 import { Formik, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { getContacts } from '../../redux/selectors';
-import { addContact } from '../../redux/contactsSlice';
+import { selectContacts } from 'redux/selectors';
+import { addContact } from 'redux/operations';
 
 const initialValues = {
   name: '',
@@ -25,11 +24,11 @@ let userSchema = yup.object({
 
 export function ContactForm() {
   const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
+  const contacts = useSelector(selectContacts);
 
   const handleOnSubmit = (values, actions) => {
     if (contacts.find(contact => contact.name.toLowerCase() === values.name.toLowerCase()) === undefined) {
-      const item = { id: nanoid(), name: values.name, number: values.number };
+      const item = { name: values.name, phone: values.number };
       dispatch(addContact(item));
       actions.resetForm();
     } else {
